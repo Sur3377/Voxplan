@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0a12">
-<title>Oxplant — Brain Dump Studio</title>
+<title>Voxplan — Brain Dump Studio</title>
 <style>
 :root {
   color-scheme: dark;
@@ -144,7 +144,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border
     <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 15c-6 0-9-3.5-9-9 5.5 0 9 3 9 9Z"/><path d="M12 11c0-5 3-8 8-8 0 5-3 8-8 8Z"/></svg>
     </div>
-    <div><h1>oxplant<span style="color:var(--purple)">.</span></h1><p>Your mind, organized.</p></div>
+    <div><h1>Voxplan<span style="color:var(--purple)">.</span></h1><p>Your mind, organized.</p></div>
   </div>
   <div class="header-right">
     <div class="local-pill"><span class="dot"></span> LOCAL MODE</div>
@@ -245,7 +245,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border
   </aside>
 </div>
 
-<footer><span>✳ Oxplant · A little more clarity, every day.</span><span>Private by design · Tasks saved in this browser</span></footer>
+<footer><span>✳ Voxplan · A little more clarity, every day.</span><span>Private by design · Tasks saved in this browser</span></footer>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -262,7 +262,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border
   'use strict';
 
   const $ = id => document.getElementById(id);
-  const STORAGE_KEY = 'oxplant.workspace.v1';
+  const STORAGE_KEY = 'Voxplan.workspace.v1';
   const FOCUS_SECONDS = 25 * 60;
   const CIRCUMFERENCE = 2 * Math.PI * 84;
   const priorities = ['High', 'Medium', 'Low'];
@@ -492,8 +492,8 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border
     $('sessionTitle').textContent = timerFinished ? 'You showed up. That counts.' : timerRunning ? 'Protect your focus.' : 'Make room for deep work';
     $('sessionSubtitle').textContent = timerFinished ? 'Take a breath, celebrate, and reset when ready.' : timerRunning ? 'One thing at a time. Ignore the noise.' : 'Pick one task and give it your attention.';
     document.title = timerRunning
-      ? $('timerDisplay').textContent + ' · Oxplant'
-      : 'Oxplant — Brain Dump Studio';
+      ? $('timerDisplay').textContent + ' · Voxplan'
+      : 'Voxplan — Brain Dump Studio';
   }
 
   function stopTimer() {
@@ -514,7 +514,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border
       showToast('Focus session complete! Take a well-earned break.');
       try {
         if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Oxplant — Focus complete', { body: 'Your 25-minute session is finished. Great work!' });
+          new Notification('Voxplan — Focus complete', { body: 'Your 25-minute session is finished. Great work!' });
         }
       } catch (_) {}
       return;
