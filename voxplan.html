@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0a12">
+<title>Oxplant — Brain Dump Studio</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#0b0a12; --panel:#12111c; --card:#171623; --border:#292638;
+  --text:#f5f3ff; --muted:#9692ab; --purple:#a78bfa; --violet:#8b5cf6;
+  --green:#67e8b0; --red:#fb7185; --yellow:#fbbf24;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% -25%,#292047 0,transparent 52%),var(--bg);color:var(--text);font:14px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+button:active{transform:scale(.98)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
+.app{max-width:1260px;margin:auto;padding:26px 30px 44px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(140deg,#c4b5fd,#7c3aed);display:grid;place-items:center;color:white;box-shadow:0 7px 30px #8b5cf633}
+.logo svg{width:25px;height:25px}
+.brand h1{font-size:20px;letter-spacing:-.8px;margin:0;font-weight:800}
+.brand p{margin:1px 0 0;color:var(--muted);font-size:12px}
+.header-right{display:flex;align-items:center;gap:10px}
+.local-pill{border:1px solid #245943;background:#10261f;color:var(--green);padding:7px 11px;border-radius:30px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.ghost,.secondary,.primary,.danger{border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);background:var(--card)}
+.ghost:hover,.secondary:hover{border-color:#65558c;background:#201d30}
+.primary{background:var(--violet);border-color:var(--violet);font-weight:700;color:white}
+.primary:hover{background:#9a73fa}
+.danger{color:var(--red);border-color:#55303c;background:#21131b}
+.danger:hover{background:#351720}
+.hero{padding:35px 0 24px}
+.eyebrow{color:var(--purple);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
+h2{font-size:clamp(27px,4vw,38px);letter-spacing:-1.5px;line-height:1.15;margin:10px 0}
+.hero p{color:var(--muted);max-width:600px;margin:10px 0 0;line-height:1.8}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:8px 0 28px}
+.stat{background:linear-gradient(145deg,#191725,#13121c);border:1px solid var(--border);border-radius:16px;padding:19px;min-width:0}
+.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;gap:6px}
+.stat-icon{width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:#29213f;color:var(--purple);font-size:16px}
+.stat-value{font-size:30px;font-weight:750;letter-spacing:-1.2px;margin:12px 0 2px;line-height:1.2}
+.stat-foot{font-size:11px;color:var(--muted)}
+.green{color:var(--green)}.purple{color:var(--purple)}.yellow{color:var(--yellow)}
+.progress-track{height:5px;background:#302b3c;border-radius:8px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#c4b5fd);border-radius:8px;transition:width .3s}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:18px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:23px;min-width:0}
+.panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:19px}
+.panel-heading h3{margin:0;font-size:16px;letter-spacing:-.3px}
+.panel-heading p{color:var(--muted);font-size:12px;margin:5px 0 0}
+.step{font-size:10px;letter-spacing:1px;color:#c4b5fd;background:#2b2047;padding:5px 8px;border-radius:7px;font-weight:800;white-space:nowrap}
+textarea{display:block;width:100%;min-height:220px;resize:vertical;background:#0d0c15;border:1px solid #302b40;border-radius:12px;color:var(--text);padding:15px;line-height:1.85}
+textarea::placeholder{color:#66617c}
+textarea:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px #8b5cf61c}
+.examples{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 17px}
+.chip{font-size:11px;border:1px solid var(--border);border-radius:20px;padding:5px 9px;color:var(--muted);background:transparent}
+.chip:hover{border-color:var(--purple);color:var(--purple)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+input[type="text"],input[type="number"],select{width:100%;background:#0d0c15;color:var(--text);border:1px solid #302b40;border-radius:9px;padding:10px 11px;min-width:0}
+.action-row{display:flex;gap:10px;align-items:center}
+.action-row .primary{flex:1}
+.full{width:100%}
+.hint{font-size:11px;color:var(--muted);margin:12px 0 0;line-height:1.7}
+kbd{font:10px ui-monospace,monospace;color:#d6d0e8;background:#252131;border:1px solid #393247;border-radius:4px;padding:2px 5px}
+.task-panel{margin-top:18px}
+.task-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.task-toolbar input{flex:1;min-width:120px}
+.filter{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 10px;font-size:11px}
+.filter.active{background:#2b2047;color:#d8ccff;border-color:#6145a1}
+.task-list{display:flex;flex-direction:column;gap:9px}
+.task{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:11px;align-items:start;padding:13px 12px;border:1px solid var(--border);background:#15141f;border-radius:12px;transition:border-color .2s}
+.task:hover{border-color:#48405d}
+.task input[type="checkbox"]{appearance:none;width:18px;height:18px;border:1.5px solid #5e5870;border-radius:6px;background:#0d0c15;cursor:pointer;margin:2px 0 0;display:grid;place-items:center}
+.task input[type="checkbox"]:checked{background:var(--violet);border-color:var(--violet)}
+.task input[type="checkbox"]:checked:after{content:"✓";font-size:12px;color:white;font-weight:800}
+.task-body{min-width:0}
+.task-name{display:block;overflow-wrap:anywhere;font-size:13px;font-weight:600;line-height:1.6}
+.task.done .task-name{color:#777287;text-decoration:line-through}
+.task-meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:7px}
+.priority{font-size:10px;font-weight:750;border-radius:5px;padding:3px 7px}
+.priority.High{color:#fda4af;background:#3a1e2a}
+.priority.Medium{color:#fcd34d;background:#352d1b}
+.priority.Low{color:#86efac;background:#193329}
+.duration{font-size:10px;color:var(--muted)}
+.task-buttons{display:flex;gap:5px;align-items:center}
+.icon-btn{width:29px;height:29px;display:grid;place-items:center;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:7px}
+.icon-btn:hover{background:#29213f;color:var(--purple);border-color:#39304e}
+.icon-btn.delete:hover{color:var(--red);background:#301822;border-color:#56303d}
+.empty{text-align:center;padding:38px 12px;border:1px dashed #393247;border-radius:12px;color:var(--muted)}
+.empty .empty-icon{font-size:27px;margin-bottom:9px}
+.empty strong{display:block;color:#e1ddef;font-size:13px;margin-bottom:4px}
+.empty span{font-size:12px}
+.task-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px;color:var(--muted);font-size:11px}
+.right-col{display:flex;flex-direction:column;gap:18px}
+.timer-panel{position:relative;overflow:hidden}
+.timer-panel:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:#7c3aed10;right:-60px;top:-65px;pointer-events:none}
+.timer-center{text-align:center;padding:10px 0 6px}
+.timer-ring{width:190px;height:190px;margin:0 auto 16px;position:relative;display:grid;place-items:center}
+.timer-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.timer-ring circle{fill:none;stroke-width:5}
+.ring-bg{stroke:#302a3e}.ring-progress{stroke:var(--purple);stroke-linecap:round;transition:stroke-dashoffset .5s}
+.timer-value{position:absolute;font-size:40px;font-weight:750;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.timer-caption{font-size:12px;color:var(--muted);margin-top:0}
+.timer-buttons{display:flex;justify-content:center;gap:9px;margin-top:19px}
+.timer-buttons button{min-width:90px}
+.timer-state{display:inline-flex;align-items:center;gap:7px;margin-top:15px;color:var(--muted);font-size:11px}
+.timer-state .dot{background:var(--purple)}
+.session-banner{display:flex;align-items:center;gap:11px;background:#1a1629;border:1px solid #35284d;border-radius:12px;padding:12px;margin-top:22px}
+.session-icon{font-size:20px}
+.session-banner strong{font-size:12px;display:block}
+.session-banner span{color:var(--muted);font-size:11px}
+.quick-add{margin-top:18px}
+.quick-add-row{display:flex;gap:8px}
+.quick-add-row input{flex:1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:10px;margin-top:13px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:6px;height:6px;border-radius:50%;display:inline-block}
+footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);margin-top:28px;padding-top:18px;color:#777287;font-size:11px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#201b30;border:1px solid #4b3b70;color:#eee8ff;padding:11px 16px;border-radius:10px;box-shadow:0 12px 40px #0007;z-index:10;transition:.2s;max-width:calc(100% - 30px);text-align:center;font-size:12px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.dialog-backdrop{position:fixed;inset:0;background:#0009;z-index:20;display:none;place-items:center;padding:18px}
+.dialog-backdrop.open{display:grid}
+.dialog{background:#171522;border:1px solid #383149;border-radius:16px;padding:24px;width:min(410px,100%);box-shadow:0 20px 70px #0009}
+.dialog h3{margin:0 0 8px;font-size:18px}
+.dialog p{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 20px}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px}
+[hidden]{display:none!important}
+@media(min-width:1000px){.task-panel{margin-top:18px}}
+@media(max-width:800px){.app{padding:20px 18px 32px}.main-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.right-col{display:grid;grid-template-columns:1fr 1fr;align-items:start}.right-col .timer-panel{grid-column:1/-1}.hero{padding-top:28px}}
+@media(max-width:500px){.app{padding:15px 12px 25px}header{padding-bottom:19px}.brand p{font-size:10px}.brand h1{font-size:18px}.logo{width:37px;height:37px}.header-right{gap:6px}.local-pill{font-size:0;padding:10px}.local-pill .dot{width:7px;height:7px}.header-right .ghost{padding:8px;font-size:11px}.hero{padding:25px 0 18px}h2{font-size:28px}.stats{gap:9px;margin-bottom:18px}.stat{padding:14px}.stat-value{font-size:25px}.stat-top{font-size:11px}.stat-icon{width:27px;height:27px}.panel{padding:16px;border-radius:14px}.form-row{grid-template-columns:1fr 1fr}.right-col{display:flex}.timer-ring{width:170px;height:170px}.timer-value{font-size:36px}.task{padding:11px 9px;gap:8px}.task-buttons{gap:0}.icon-btn{width:27px;height:27px}.task-toolbar{gap:6px}.filter{padding:7px 8px}.task-footer .danger{padding:8px 10px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 15c-6 0-9-3.5-9-9 5.5 0 9 3 9 9Z"/><path d="M12 11c0-5 3-8 8-8 0 5-3 8-8 8Z"/></svg>
+    </div>
+    <div><h1>oxplant<span style="color:var(--purple)">.</span></h1><p>Your mind, organized.</p></div>
+  </div>
+  <div class="header-right">
+    <div class="local-pill"><span class="dot"></span> LOCAL MODE</div>
+    <button class="ghost" id="sampleBtn" title="Restore the example tasks">↻ Sample</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">✳ Your personal focus studio</div>
+  <h2>Turn the noise into <span style="color:var(--purple)">momentum.</span></h2>
+  <p>Get everything out of your head. Break the brain dump into doable tasks, pick your next move, and get into your flow.</p>
+</section>
+
+<section class="stats" aria-label="Task statistics">
+  <div class="stat"><div class="stat-top">Total tasks <span class="stat-icon">▤</span></div><div class="stat-value" id="totalStat">0</div><div class="stat-foot">Everything on your plate</div></div>
+  <div class="stat"><div class="stat-top">Completed <span class="stat-icon" style="color:var(--green);background:#18352b">✓</span></div><div class="stat-value green" id="completedStat">0</div><div class="stat-foot">Small wins add up</div></div>
+  <div class="stat"><div class="stat-top">Time remaining <span class="stat-icon" style="color:var(--yellow);background:#382d1b">◷</span></div><div class="stat-value yellow" id="timeStat">0m</div><div class="stat-foot">Estimated unfinished work</div></div>
+  <div class="stat"><div class="stat-top">Progress <span class="stat-icon">↗</span></div><div class="stat-value purple" id="progressStat">0%</div><div class="progress-track"><div class="progress-fill" id="progressBar"></div></div></div>
+</section>
+
+<div class="main-grid">
+  <div class="left-col">
+    <section class="panel">
+      <div class="panel-heading">
+        <div><h3>Brain dump</h3><p>Let it out. Sort it out. Get it done.</p></div>
+        <span class="step">STEP 01</span>
+      </div>
+      <label for="brainDump" class="hint" style="display:block;margin:0 0 10px">What's taking up space in your head?</label>
+      <textarea id="brainDump" placeholder="I need to finish my project report&#10;Study signals and systems for tomorrow&#10;Reply to my project guide&#10;Maybe go for a run..."></textarea>
+      <div class="examples">
+        <button class="chip" data-insert="Study for tomorrow's exam">+ Study</button>
+        <button class="chip" data-insert="Finish project report">+ Project</button>
+        <button class="chip" data-insert="Reply to important messages">+ Messages</button>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="defaultPriority">Default priority</label><select id="defaultPriority"><option>Medium</option><option>High</option><option>Low</option></select></div>
+        <div class="field"><label for="defaultDuration">Minutes per task</label><input id="defaultDuration" type="number" min="1" max="1440" value="25"></div>
+      </div>
+      <div class="action-row"><button class="primary" id="extractBtn">✦ Organize my thoughts <span aria-hidden="true">→</span></button></div>
+      <p class="hint">No AI or external service is used. Extraction is a local game: each non-empty line becomes a task. You can edit everything afterward.</p>
+      <div class="quick-add">
+        <div class="panel-heading" style="margin-bottom:10px"><div><h3 style="font-size:13px">Quick capture</h3><p>Add one thought without leaving your flow.</p></div></div>
+        <div class="quick-add-row"><input id="quickTask" type="text" maxlength="300" placeholder="One thing I need to do..." aria-label="Quick task"><button class="primary" id="quickAddBtn">Add +</button></div>
+      </div>
+    </section>
+
+    <section class="panel task-panel">
+      <div class="panel-heading">
+        <div><h3>Your tasks <span id="taskHeadingCount" style="color:var(--muted);font-weight:500">(0)</span></h3><p>One thing at a time. You've got this.</p></div>
+        <span class="step">STEP 02</span>
+      </div>
+      <div class="task-toolbar">
+        <input id="taskSearch" type="text" placeholder="Search tasks..." aria-label="Search tasks">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="active">Open</button>
+        <button class="filter" data-filter="done">Done</button>
+      </div>
+      <div class="task-list" id="taskList" aria-live="polite"></div>
+      <div class="task-footer"><span id="listSummary">Ready when you are.</span><button class="danger" id="clearCompletedBtn">Clear completed</button></div>
+    </section>
+  </div>
+
+  <aside class="right-col">
+    <section class="panel timer-panel">
+      <div class="panel-heading"><div><h3>Focus timer</h3><p>Twenty-five minutes. Just you and the task.</p></div><span class="step">STEP 03</span></div>
+      <div class="timer-center">
+        <div class="timer-ring" role="timer" aria-label="Focus timer">
+          <svg viewBox="0 0 190 190" aria-hidden="true"><circle class="ring-bg" cx="95" cy="95" r="84"></circle><circle class="ring-progress" id="timerRing" cx="95" cy="95" r="84" stroke-dasharray="527.788" stroke-dashoffset="0"></circle></svg>
+          <div class="timer-value" id="timerDisplay">25:00</div>
+        </div>
+        <div class="timer-caption" id="timerCaption">Ready to focus?</div>
+        <div class="timer-buttons"><button class="primary" id="timerStartBtn">▶ Start</button><button class="secondary" id="timerResetBtn">↺ Reset</button></div>
+        <div class="timer-state"><span class="dot"></span><span id="timerStatus">25-minute focus session</span></div>
+      </div>
+      <div class="session-banner"><div class="session-icon">✦</div><div><strong id="sessionTitle">Make room for deep work</strong><span id="sessionSubtitle">Pick one task and give it your attention.</span></div></div>
+      <p class="hint">The timer runs while this page stays open. Keep the tab open during your session.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading"><div><h3>Your priority map</h3><p>See where your attention belongs.</p></div></div>
+      <div style="display:flex;align-items:center;gap:12px;margin:18px 0">
+        <div style="width:9px;height:9px;border-radius:50%;background:var(--red)"></div>
+        <div style="flex:1;font-size:12px">High priority</div><strong id="highCount">0</strong>
+      </div>
+      <div class="progress-track" style="margin:0 0 18px"><div class="progress-fill" id="highBar" style="background:#fb7185"></div></div>
+      <div style="display:flex;align-items:center;gap:12px;margin:18px 0">
+        <div style="width:9px;height:9px;border-radius:50%;background:var(--yellow)"></div>
+        <div style="flex:1;font-size:12px">Medium priority</div><strong id="mediumCount">0</strong>
+      </div>
+      <div class="progress-track" style="margin:0 0 18px"><div class="progress-fill" id="mediumBar" style="background:#fbbf24"></div></div>
+      <div style="display:flex;align-items:center;gap:12px;margin:18px 0">
+        <div style="width:9px;height:9px;border-radius:50%;background:var(--green)"></div>
+        <div style="flex:1;font-size:12px">Low priority</div><strong id="lowCount">0</strong>
+      </div>
+      <div class="progress-track" style="margin:0 0 5px"><div class="progress-fill" id="lowBar" style="background:#67e8b0"></div></div>
+      <div class="legend"><span><i style="background:var(--red)"></i>Urgent</span><span><i style="background:var(--yellow)"></i>Important</span><span><i style="background:var(--green)"></i>Whenever</span></div>
+    </section>
+  </aside>
+</div>
+
+<footer><span>✳ Oxplant · A little more clarity, every day.</span><span>Private by design · Tasks saved in this browser</span></footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="dialog-backdrop" id="confirmDialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+  <div class="dialog">
+    <h3 id="dialogTitle">Clear your workspace?</h3>
+    <p id="dialogText">This removes all tasks saved in this browser. You can restore the sample workspace afterward.</p>
+    <div class="dialog-actions"><button class="secondary" id="cancelClear">Keep tasks</button><button class="danger" id="confirmClear">Clear everything</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = 'oxplant.workspace.v1';
+  const FOCUS_SECONDS = 25 * 60;
+  const CIRCUMFERENCE = 2 * Math.PI * 84;
+  const priorities = ['High', 'Medium', 'Low'];
+  let tasks = [];
+  let filter = 'all';
+  let toastTimeout;
+  let timerInterval = null;
+  let timerRunning = false;
+  let remainingSeconds = FOCUS_SECONDS;
+  let endTimestamp = 0;
+  let timerFinished = false;
+  let confirmAction = null;
+
+  const uid = () => (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'task-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+
+  const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[char]);
+
+  function makeTask(text, priority = 'Medium', duration = 25, done = false) {
+    return {
+      id: uid(),
+      text: String(text).trim().slice(0, 300),
+      priority: priorities.includes(priority) ? priority : 'Medium',
+      duration: Math.max(1, Math.min(1440, Math.round(Number(duration) || 25))),
+      done: Boolean(done)
+    };
+  }
+
+  function sampleTasks() {
+    return [
+      makeTask('Review Signals & Systems lecture notes', 'High', 35),
+      makeTask('Finish the project progress report', 'High', 50),
+      makeTask('Solve 10 practice questions', 'Medium', 25),
+      makeTask('Reply to project guide', 'Medium', 10),
+      makeTask('Plan tomorrow’s study session', 'Low', 15)
+    ];
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 1, tasks, remainingSeconds, timerFinished
+      }));
+    } catch (error) {
+      showToast('Browser storage is unavailable. Changes may not persist.');
+    }
+  }
+
+  function load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (saved && Array.isArray(saved.tasks)) {
+        tasks = saved.tasks
+          .filter(t => t && typeof t.text === 'string' && t.text.trim())
+          .map(t => ({
+            id: typeof t.id === 'string' ? t.id : uid(),
+            text: t.text.trim().slice(0, 300),
+            priority: priorities.includes(t.priority) ? t.priority : 'Medium',
+            duration: Math.max(1, Math.min(1440, Math.round(Number(t.duration) || 25))),
+            done: Boolean(t.done)
+          }));
+        remainingSeconds = Math.max(0, Math.min(FOCUS_SECONDS,
+          Math.round(Number(saved.remainingSeconds) || 0)));
+        if (!Number.isFinite(Number(saved.remainingSeconds))) remainingSeconds = FOCUS_SECONDS;
+        timerFinished = Boolean(saved.timerFinished);
+        if (remainingSeconds === 0 && !timerFinished) remainingSeconds = FOCUS_SECONDS;
+      } else {
+        tasks = sampleTasks();
+      }
+    } catch (error) {
+      tasks = sampleTasks();
+      remainingSeconds = FOCUS_SECONDS;
+      timerFinished = false;
+    }
+    render();
+    updateTimer();
+    save();
+  }
+
+  function showToast(message) {
+    const toast = $('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  function renderStats() {
+    const total = tasks.length;
+    const completed = tasks.filter(t => t.done).length;
+    const remaining = tasks.filter(t => !t.done).reduce((sum, t) => sum + t.duration, 0);
+    const percent = total ? Math.round(completed / total * 100) : 0;
+    $('totalStat').textContent = total;
+    $('completedStat').textContent = completed;
+    $('timeStat').textContent = remaining >= 60
+      ? Math.floor(remaining / 60) + 'h ' + (remaining % 60 ? remaining % 60 + 'm' : '')
+      : remaining + 'm';
+    $('progressStat').textContent = percent + '%';
+    $('progressBar').style.width = percent + '%';
+
+    const counts = Object.fromEntries(priorities.map(p => [p, tasks.filter(t => t.priority === p && !t.done).length]));
+    const activeTotal = counts.High + counts.Medium + counts.Low;
+    [['High','high'],['Medium','medium'],['Low','low']].forEach(([priority, id]) => {
+      $(id + 'Count').textContent = counts[priority];
+      $(id + 'Bar').style.width = activeTotal ? (counts[priority] / activeTotal * 100) + '%' : '0%';
+    });
+    $('taskHeadingCount').textContent = '(' + total + ')';
+    $('listSummary').textContent = total
+      ? `${completed} of ${total} completed · ${total - completed} remaining`
+      : 'A clean slate. Start with one thought.';
+  }
+
+  function renderTasks() {
+    const list = $('taskList');
+    const query = $('taskSearch').value.trim().toLowerCase();
+    const visible = tasks.filter(task => {
+      const matchesFilter = filter === 'all' || (filter === 'done' ? task.done : !task.done);
+      return matchesFilter && task.text.toLowerCase().includes(query);
+    });
+
+    document.querySelectorAll('[data-filter]').forEach(button => {
+      const active = button.dataset.filter === filter;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+
+    if (!visible.length) {
+      const isEmpty = !tasks.length;
+      list.innerHTML = `<div class="empty"><div class="empty-icon">${isEmpty ? '✳' : '⌕'}</div><strong>${isEmpty ? 'Space to think.' : 'Nothing here just yet.'}</strong><span>${isEmpty ? 'Drop your thoughts above and turn them into a plan.' : 'Try another filter or search term.'}</span></div>`;
+      return;
+    }
+
+    list.innerHTML = visible.map(task => `
+      <article class="task ${task.done ? 'done' : ''}" data-task-id="${escapeHTML(task.id)}">
+        <input type="checkbox" class="task-check" aria-label="Mark ${escapeHTML(task.text)} as ${task.done ? 'incomplete' : 'complete'}" ${task.done ? 'checked' : ''}>
+        <div class="task-body">
+          <span class="task-name">${escapeHTML(task.text)}</span>
+          <div class="task-meta">
+            <span class="priority ${task.priority}">${task.priority}</span>
+            <span class="duration">◷ ${task.duration} min</span>
+          </div>
+        </div>
+        <div class="task-buttons">
+          <button class="icon-btn edit" aria-label="Edit task: ${escapeHTML(task.text)}" title="Edit task">✎</button>
+          <button class="icon-btn delete" aria-label="Delete task: ${escapeHTML(task.text)}" title="Delete task">×</button>
+        </div>
+      </article>`).join('');
+  }
+
+  function render() {
+    renderStats();
+    renderTasks();
+  }
+
+  function addTask(text, priority, duration) {
+    const cleaned = String(text || '').trim();
+    if (!cleaned) {
+      showToast('Write a task first.');
+      return false;
+    }
+    tasks.unshift(makeTask(cleaned, priority, duration));
+    render();
+    save();
+    return true;
+  }
+
+  function extractTasks() {
+    const raw = $('brainDump').value;
+    const lines = raw.split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map(line => line.replace(/^(?:[-*•]\s+|\d+[.)]\s+)/, '').trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      showToast('Add a few thoughts, one per line.');
+      $('brainDump').focus();
+      return;
+    }
+
+    const existing = new Set(tasks.map(t => t.text.toLowerCase()));
+    const unique = [...new Set(lines)].filter(line => !existing.has(line.toLowerCase()));
+    if (!unique.length) {
+      showToast('Those tasks are already on your list.');
+      return;
+    }
+
+    const priority = $('defaultPriority').value;
+    const duration = $('defaultDuration').value;
+    const added = unique.map(line => makeTask(line, priority, duration));
+    tasks = [...added, ...tasks];
+    $('brainDump').value = '';
+    filter = 'all';
+    $('taskSearch').value = '';
+    render();
+    save();
+    showToast(`${added.length} thought${added.length === 1 ? '' : 's'} organized into tasks.`);
+  }
+
+  function openConfirm(title, description, action, confirmLabel = 'Confirm') {
+    $('dialogTitle').textContent = title;
+    $('dialogText').textContent = description;
+    $('confirmClear').textContent = confirmLabel;
+    confirmAction = action;
+    $('confirmDialog').classList.add('open');
+    $('cancelClear').focus();
+  }
+
+  function closeConfirm() {
+    $('confirmDialog').classList.remove('open');
+    confirmAction = null;
+  }
+
+  function updateTimer() {
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+    $('timerDisplay').textContent =
+      String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    $('timerRing').style.strokeDasharray = CIRCUMFERENCE;
+    $('timerRing').style.strokeDashoffset = CIRCUMFERENCE * (1 - remainingSeconds / FOCUS_SECONDS);
+    $('timerStartBtn').textContent = timerRunning ? 'Ⅱ Pause' : (remainingSeconds === 0 ? '↻ Restart' : remainingSeconds < FOCUS_SECONDS ? '▶ Resume' : '▶ Start');
+    $('timerCaption').textContent = timerFinished ? 'Session complete. Nice work!' : timerRunning ? 'Stay with the task.' : remainingSeconds < FOCUS_SECONDS ? 'Ready when you are.' : 'Ready to focus?';
+    $('timerStatus').textContent = timerFinished ? '25-minute session complete' : timerRunning ? 'Focus session in progress' : remainingSeconds < FOCUS_SECONDS ? 'Session paused' : '25-minute focus session';
+    $('sessionTitle').textContent = timerFinished ? 'You showed up. That counts.' : timerRunning ? 'Protect your focus.' : 'Make room for deep work';
+    $('sessionSubtitle').textContent = timerFinished ? 'Take a breath, celebrate, and reset when ready.' : timerRunning ? 'One thing at a time. Ignore the noise.' : 'Pick one task and give it your attention.';
+    document.title = timerRunning
+      ? $('timerDisplay').textContent + ' · Oxplant'
+      : 'Oxplant — Brain Dump Studio';
+  }
+
+  function stopTimer() {
+    if (timerInterval !== null) clearInterval(timerInterval);
+    timerInterval = null;
+    timerRunning = false;
+  }
+
+  function tick() {
+    if (!timerRunning) return;
+    remainingSeconds = Math.max(0, Math.ceil((endTimestamp - Date.now()) / 1000));
+    if (remainingSeconds <= 0) {
+      remainingSeconds = 0;
+      timerFinished = true;
+      stopTimer();
+      updateTimer();
+      save();
+      showToast('Focus session complete! Take a well-earned break.');
+      try {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Oxplant — Focus complete', { body: 'Your 25-minute session is finished. Great work!' });
+        }
+      } catch (_) {}
+      return;
+    }
+    updateTimer();
+  }
+
+  function startTimer() {
+    if (timerRunning) {
+      remainingSeconds = Math.max(0, Math.ceil((endTimestamp - Date.now()) / 1000));
+      stopTimer();
+      updateTimer();
+      save();
+      return;
+    }
+    if (remainingSeconds <= 0 || timerFinished) {
+      remainingSeconds = FOCUS_SECONDS;
+      timerFinished = false;
+    }
+    endTimestamp = Date.now() + remainingSeconds * 1000;
+    timerRunning = true;
+    timerInterval = setInterval(tick, 250);
+    updateTimer();
+    save();
+  }
+
+  function resetTimer() {
+    stopTimer();
+    remainingSeconds = FOCUS_SECONDS;
+    timerFinished = false;
+    updateTimer();
+    save();
+    showToast('Timer reset to 25 minutes.');
+  }
+
+  $('extractBtn').addEventListener('click', extractTasks);
+
+  $('brainDump').addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      event.preventDefault();
+      extractTasks();
+    }
+  });
+
+  document.querySelectorAll('[data-insert]').forEach(button => {
+    button.addEventListener('click', () => {
+      const textarea = $('brainDump');
+      const value = button.dataset.insert;
+      textarea.value += (textarea.value && !textarea.value.endsWith('\n') ? '\n' : '') + value;
+      textarea.focus();
+    });
+  });
+
+  $('quickAddBtn').addEventListener('click', () => {
+    if (addTask($('quickTask').value, $('defaultPriority').value, $('defaultDuration').value)) {
+      $('quickTask').value = '';
+      $('quickTask').focus();
+      filter = 'all';
+      renderTasks();
+    }
+  });
+
+  $('quickTask').addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      $('quickAddBtn').click();
+    }
+  });
+
+  $('taskList').addEventListener('change', event => {
+    if (!event.target.matches('.task-check')) return;
+    const article = event.target.closest('[data-task-id]');
+    const task = tasks.find(t => t.id === article?.dataset.taskId);
+    if (!task) return;
+    task.done = event.target.checked;
+    render();
+    save();
+    if (task.done) showToast('One more thing off your mind. ✓');
+  });
+
+  $('taskList').addEventListener('click', event => {
+    const article = event.target.closest('[data-task-id]');
+    if (!article) return;
+    const task = tasks.find(t => t.id === article.dataset.taskId);
+    if (!task) return;
+
+    if (event.target.closest('.delete')) {
+      tasks = tasks.filter(t => t.id !== task.id);
+      render();
+      save();
+      showToast('Task removed.');
+    } else if (event.target.closest('.edit')) {
+      const newText = prompt('Edit task name:', task.text);
+      if (newText === null) return;
+      if (!newText.trim()) {
+        showToast('A task name cannot be empty.');
+        return;
+      }
+      const newPriority = prompt('Priority: High, Medium, or Low', task.priority);
+      if (newPriority === null) return;
+      const normalizedPriority = priorities.find(p => p.toLowerCase() === newPriority.trim().toLowerCase());
+      if (!normalizedPriority) {
+        showToast('Priority must be High, Medium, or Low.');
+        return;
+      }
+      const newDuration = prompt('Estimated minutes (1–1440):', String(task.duration));
+      if (newDuration === null) return;
+      const durationNumber = Number(newDuration);
+      if (!Number.isFinite(durationNumber) || durationNumber < 1 || durationNumber > 1440) {
+        showToast('Enter a duration from 1 to 1440 minutes.');
+        return;
+      }
+      task.text = newText.trim().slice(0, 300);
+      task.priority = normalizedPriority;
+      task.duration = Math.round(durationNumber);
+      render();
+      save();
+      showToast('Task updated.');
+    }
+  });
+
+  document.querySelectorAll('[data-filter]').forEach(button => {
+    button.addEventListener('click', () => {
+      filter = button.dataset.filter;
+      renderTasks();
+    });
+  });
+
+  $('taskSearch').addEventListener('input', renderTasks);
+
+  $('clearCompletedBtn').addEventListener('click', () => {
+    const completed = tasks.filter(t => t.done).length;
+    if (!completed) {
+      showToast('No completed tasks to clear.');
+      return;
+    }
+    openConfirm('Clear completed tasks?', `Remove ${completed} completed task${completed === 1 ? '' : 's'} from your workspace?`, () => {
+      tasks = tasks.filter(t => !t.done);
+      render();
+      save();
+      showToast('Completed tasks cleared.');
+    }, 'Clear completed');
+  });
+
+  $('sampleBtn').addEventListener('click', () => {
+    openConfirm('Restore sample tasks?', 'Replace your current task list with five example tasks? Your current tasks will be removed.', () => {
+      tasks = sampleTasks();
+      $('taskSearch').value = '';
+      filter = 'all';
+      render();
+      save();
+      showToast('Sample workspace restored.');
+    }, 'Restore sample');
+  });
+
+  $('cancelClear').addEventListener('click', closeConfirm);
+  $('confirmClear').addEventListener('click', () => {
+    const action = confirmAction;
+    closeConfirm();
+    if (typeof action === 'function') action();
+  });
+
+  $('confirmDialog').addEventListener('click', event => {
+    if (event.target === $('confirmDialog')) closeConfirm();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeConfirm();
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' &&
+        document.activeElement !== $('brainDump')) {
+      event.preventDefault();
+      $('quickTask').focus();
+    }
+  });
+
+  $('timerStartBtn').addEventListener('click', startTimer);
+  $('timerResetBtn').addEventListener('click', resetTimer);
+
+  // Reconcile a running session with wall-clock time after tab suspension.
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && timerRunning) tick();
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
